@@ -8,10 +8,7 @@
 #include <X11/keysym.h>
 
 // Tamanho inicial do bloco
-#define INITIAL_BLOCK_SIZE 130
-#define WIDTH 20
-#define HEIGHT 10
-#define NUM_IMAGES 9
+
 
 
 
@@ -37,15 +34,20 @@ void draw_map(Game *game) {
             int y = j * block_size + 30;
 
             if (game->map[j][i] == '1') {
-                mlx_pixel_put(game->mlx, game->win, x, y, 0xFFFFFF); // Parede
+                mlx_put_image_to_window(game->mlx, game->win, game->obstaculo_img, x, y);
+                //mlx_pixel_put(game->mlx, game->win, x, y, 0xFFFFFF); // Parede
             } else if (game->map[j][i] == '0') {
-                mlx_pixel_put(game->mlx, game->win, x, y, 0x00FF00); // Espaço Livre
+                mlx_put_image_to_window(game->mlx, game->win, game->floor_img, x, y);
+
+                //mlx_pixel_put(game->mlx, game->win, x + 50, y + 50, 0x0000FF); // Espaço Livre
             } else if (game->map[j][i] == 'P') {
                 mlx_put_image_to_window(game->mlx, game->win, game->player_img, x, y);
             } else if (game->map[j][i] == 'C') {
-                mlx_pixel_put(game->mlx, game->win, x, y, 0xFFD700); // Coletável
+                mlx_put_image_to_window(game->mlx, game->win, game->coletavel_img, x, y);
+                //mlx_pixel_put(game->mlx, game->win, x, y, 0xFFD700); // Coletável
             } else if (game->map[j][i] == 'E') {
-                mlx_pixel_put(game->mlx, game->win, x, y, 0x8A2BE2); // Portal
+                mlx_put_image_to_window(game->mlx, game->win, game->gate_img, x, y);
+                //mlx_pixel_put(game->mlx, game->win, x, y, 0x8A2BE2); // Portal
             }
         }
     }
@@ -82,7 +84,7 @@ void animate_and_move_right(Game *game) {
             mlx_do_sync(game->mlx);  // Forçar sincronização
 
             progress += step;
-            usleep(30000);  // Adicionar um pequeno atraso para controlar a velocidade da transição
+            usleep(70000);  // Adicionar um pequeno atraso para controlar a velocidade da transição
             animate_player(game);  // Chamar a função para animar o jogador durante o movimento
         }
 
@@ -130,7 +132,7 @@ int animate_player(Game *game) {
         mlx_put_image_to_window(game->mlx, game->win, game->player_R_images[game->current_image_index], x, y);
 
         // Adicionar um pequeno atraso entre cada imagem
-        usleep(25000);
+        usleep(5000);
 
         // reset se for a última imagem
         if (game->current_image_index == NUM_IMAGES - 1) {
@@ -158,9 +160,8 @@ int handle_key(int key, Game *game) {
     } else if (key == XK_Left) {
         new_x--;
     } else if (key == XK_Right) {
-        
-        animate_and_move_right(game);
         new_x++;
+        animate_and_move_right(game);
     }else {
         game->is_key_pressed = 0;
         return 0;
@@ -232,7 +233,11 @@ int main(void) {
     game.win = mlx_new_window(game.mlx, game.width, game.height, "Collectibles Game");
 
     int width, height;
-    game.player_img = mlx_xpm_file_to_image(game.mlx, "images/viking000.xpm", &width, &height);
+    game.gate_img = mlx_xpm_file_to_image(game.mlx, "images/items/gate_close.xpm", &width, &height);
+    game.obstaculo_img = mlx_xpm_file_to_image(game.mlx, "images/items/obstaculo.xpm", &width, &height);
+    game.coletavel_img = mlx_xpm_file_to_image(game.mlx, "images/items/coletavel00.xpm", &width, &height);
+    game.player_img = mlx_xpm_file_to_image(game.mlx, "images/floor_player00.xpm", &width, &height);
+    game.floor_img = mlx_xpm_file_to_image(game.mlx, "images/items/floor.xpm", &width, &height);
 
     // Alocar dinamicamente o mapa
     game.map = (char **)malloc(HEIGHT * sizeof(char *));
@@ -270,7 +275,6 @@ int main(void) {
 
     // Inicializar as imagens do loop pra direita do player
     initialize_player_images(&game);
-    mlx_loop_hook(game.mlx, (int (*)(void *))animate_player, &game);
 
     // Registrar a função de tratamento de teclas
     mlx_key_hook(game.win, handle_key, &game);

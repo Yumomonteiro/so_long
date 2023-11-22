@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:14:23 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/11/22 10:56:36 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/11/22 16:04:54 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@
 #include <string.h>
 #include <X11/keysym.h>
 
-#define INITIAL_BLOCK_SIZE 130
+#define INITIAL_BLOCK_SIZE 150
 #define WIDTH 20
 #define HEIGHT 10
-#define NUM_IMAGES 9
+#define NUM_IMAGES 1
 
 typedef struct {
     char **map;
@@ -37,7 +37,10 @@ typedef struct {
     void *win;
     void *player_img;
     void *obstaculo_img;
+    void *coletavel_img;
     void *background_map;
+    void *floor_img;
+    void *gate_img;
     void *player_R_images[NUM_IMAGES];
     int current_image_index;
     int is_key_pressed;
@@ -45,7 +48,7 @@ typedef struct {
 
 
 /* UTILS */
-
+void clear_player_area(Game *game);
 void draw_map(Game *game);
 void initialize_player_images(Game *game);
 int animate_player(Game *game);
