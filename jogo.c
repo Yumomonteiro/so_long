@@ -161,14 +161,15 @@ int handle_key(int key, Game *game) {
         new_x--;
     } else if (key == XK_Right) {
         new_x++;
-        animate_and_move_right(game);
-    }else {
+        //animate_and_move_right(game);
+    } else {
         game->is_key_pressed = 0;
         return 0;
     }
 
     // Verificar se a nova posição é válida (não é uma parede)
-    if (new_x >= 0 && new_x < WIDTH && new_y >= 0 && new_y < HEIGHT && game->map[new_y][new_x] != '1') {
+    if (new_x >= 0 && new_x < WIDTH && new_y >= 0 && new_y < HEIGHT && game->map[new_y][new_x] != '1' && game->map[new_y][new_x] != 'E') 
+    {
         // Limpar a posição anterior do jogador
         game->map[game->player_y][game->player_x] = '0';
 
@@ -177,18 +178,11 @@ int handle_key(int key, Game *game) {
         game->player_y = new_y;
 
         // Verificar se o jogador coletou um item
-        if (game->map[new_y][new_x] == 'C') {
-            game->collectibles--;
-            if (game->collectibles == 0) {
-                // Se todos os itens foram coletados, substituir 'E' por '0'
-                for (int j = 0; j < HEIGHT; j++) {
-                    for (int i = 0; i < WIDTH; i++) {
-                        if (game->map[j][i] == 'E') {
-                            game->map[j][i] = '0';
-                        }
-                    }
-                }
-            }
+        if (game->map[game->player_y][game->player_x] == 'C') {
+             game->collectibles--;
+
+            // Restante do código...
+
         }
 
         // Definir a nova posição do jogador como 'P'
@@ -197,11 +191,12 @@ int handle_key(int key, Game *game) {
         // Redesenha o mapa com a nova posição do jogador
         draw_map(game);
     }
-
-    // Verificar se o jogador chegou ao portal
     if (game->map[new_y][new_x] == 'E' && game->collectibles == 0) {
         printf("Parabéns! Você chegou ao portal!\n");
         exit(0);
+    } else if (game->map[new_y][new_x] == 'E') {
+        printf("Você não pode interagir com o portal até coletar todos os itens!\n");
+        // Adicione qualquer lógica adicional que você queira executar quando o jogador tentar interagir sem coletar todos os itens.
     }
 
     return 0;
@@ -220,7 +215,7 @@ void calculate_window_size(Game *game) {
     game->win = mlx_new_window(game->mlx, window_width, window_height, "Collectibles Game");
 }
 int main(void) {
-    int fd = open("map.ber", O_RDONLY);
+    int fd = open("map5x10.ber", O_RDONLY);
     if (fd == -1) {
         perror("Erro ao abrir o arquivo");
         exit(EXIT_FAILURE);
@@ -264,6 +259,7 @@ int main(void) {
             }
         }
     }
+    printf("%d", game.collectibles);
 
     close(fd);
 

@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:14:23 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/11/22 16:04:54 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/11/23 11:15:54 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 #include <X11/keysym.h>
 
 #define INITIAL_BLOCK_SIZE 150
-#define WIDTH 20
-#define HEIGHT 10
+#define WIDTH 10
+#define HEIGHT 5
 #define NUM_IMAGES 1
 
 typedef struct {
