@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:14:23 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/11/23 18:17:58 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/11/23 19:28:06 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@
 #include <X11/keysym.h>
 #include <X11/X.h>
 
-
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 100
+# endif
 
 
 #define INITIAL_BLOCK_SIZE 150
 #define WIDTH 10
 #define HEIGHT 5
-#define NUM_IMAGES 1
+#define NUM_IMAGES 11
 
 
 typedef struct {
@@ -61,6 +63,16 @@ typedef struct {
 
 
 /* UTILS */
+
+char	*get_next_line(int fd);
+char	*buffer_total_clear(int fd, char **buffer, char *line);
+int	    line_updater(char **line, char buffer[]);
+int	    ft_strlenm(char const *s1);
+char	*ft_strjoinm(char const *s1, char const *s2);
+void	buffer_clear(char *buffer);
+// qfafaa
+int validate_map(Game *game);
+void inicialize_map(Game *game, const char *line, int count);
 void custom_delay(int iterations);
 void clear_player_area(Game *game);
 void draw_map(Game *game);

@@ -2,7 +2,8 @@
 
 
 // Função para desenhar o mapa
-void draw_map(Game *game) {
+void draw_map(Game *game) 
+{
     mlx_clear_window(game->mlx, game->win); // Limpa a janela
 
     int block_size = game->width / WIDTH;
@@ -35,84 +36,7 @@ void draw_map(Game *game) {
     }
      mlx_do_sync(game->mlx);  // Forçar sincronização
 }
-void animate_and_move_right(Game *game) {
-    // Destruir a imagem anterior do jogador
-    mlx_destroy_image(game->mlx, game->player_current_image);
 
-    // Atualizar o índice da imagem do jogador para criar um loop
-    game->current_image_index = (game->current_image_index + 1) % NUM_IMAGES;
-
-    // Atualizar a imagem do jogador com a próxima imagem no loop
-    int x = game->player_x * (game->width / WIDTH) + 30;
-    int y = game->player_y * (game->width / WIDTH) + 30;
-
-    // Construir o caminho para a próxima imagem
-    char image_path[50];
-    snprintf(image_path, sizeof(image_path), "images/loop_walking_right/viking%d.xpm", game->current_image_index);
-
-    // Carregar a próxima imagem
-    game->player_current_image = mlx_xpm_file_to_image(game->mlx, image_path, &(game->width), &(game->height));
-
-    // Colocar a nova imagem do jogador na janela
-    mlx_put_image_to_window(game->mlx, game->win, game->player_current_image, x, y);
-
-    // Introduzir um atraso personalizado entre cada imagem (ajuste o valor conforme necessário)
-    custom_delay(50000);
-
-    // Reset se for a última imagem
-    if (game->current_image_index == NUM_IMAGES - 1) {
-        game->is_key_pressed = 0;
-    }
-}
-// void animate_and_move_right(Game *game) {
-//     if (!game->is_key_pressed) {
-//         game->is_key_pressed = 1;
-
-//         // Limpar a posição anterior do jogador
-//         game->map[game->player_y][game->player_x] = '0';
-
-//         int initial_x = game->player_x * (game->width / WIDTH) + 30;
-//         int initial_y = game->player_y * (game->width / WIDTH) + 30;
-
-//         // Atualizar a posição do jogador
-//         int target_x = game->player_x + 1;
-//         int final_x = target_x * (game->width / WIDTH) + 30;
-//         int final_y = game->player_y * (game->width / WIDTH) + 30;
-
-//         float progress = 0;
-//         float step = 0.18;
-
-//         // Realizar a animação enquanto o jogador se move para a direita
-//         while (progress <= 1.0) {
-//             int intermediate_x = (1 - progress) * initial_x + progress * final_x;
-//             int intermediate_y = (1 - progress) * initial_y + progress * final_y;
-
-//             // Limpar a janela antes de desenhar a nova posição do jogador
-//             mlx_clear_window(game->mlx, game->win);
-
-//             // Atualizar a imagem do jogador com a próxima imagem no loop
-//             mlx_put_image_to_window(game->mlx, game->win, game->player_R_images[game->current_image_index], intermediate_x, intermediate_y);
-
-//             mlx_do_sync(game->mlx);  // Forçar sincronização
-
-//             progress += step;
-//             usleep(70000);  // Adicionar um pequeno atraso para controlar a velocidade da transição
-//             animate_player(game);  // Chamar a função para animar o jogador durante o movimento
-//         }
-
-//         // Definir a nova posição do jogador como 'P'
-//         game->map[game->player_y][target_x] = 'P';
-
-//         // Atualizar a posição do jogador
-//         game->player_x = target_x;
-
-//         // Redesenha o mapa com a nova posição do jogador
-//         draw_map(game);
-
-//         // Realizar a animação
-//         game->is_key_pressed = 0;
-//     }
-// }
 // Função para inicializar as imagens do jogador
 void initialize_player_images(Game *game) {
     char image_path[50];
@@ -161,7 +85,7 @@ int animate_player(Game *game) {
         mlx_put_image_to_window(game->mlx, game->win, game->player_R_images[game->current_image_index], x, y);
 
         // Adicionar um pequeno atraso entre cada imagem
-        usleep(1000000);
+        //usleep(1000000);
 
         // reset se for a última imagem
         if (game->current_image_index == NUM_IMAGES - 1) {
@@ -183,11 +107,6 @@ void check_collectibles(Game *game) {
         draw_map(game);  // Redesenha o mapa com a nova imagem do portão
     }
 }
-void custom_delay(int iterations) {
-    for (int i = 0; i < iterations; i++) {
-        // Não faz nada aqui, apenas espera.
-    }
-}
 
 // Função para manipular teclas
 int handle_key(int key, Game *game) {
@@ -206,7 +125,6 @@ int handle_key(int key, Game *game) {
             new_x--;
         } else if (key == XK_Right) {
             new_x++;
-            game->is_key_pressed = 0;
         } else {
             game->is_key_pressed = 0;
             return 0;
@@ -244,10 +162,23 @@ int handle_key(int key, Game *game) {
         printf("Você não pode interagir com o portal até coletar todos os itens!\n");
         // Adicione qualquer lógica adicional que você queira executar quando o jogador tentar interagir sem coletar todos os itens.
     }
-    printf("MOVES: %d\n", game->movies);
+    //printf("MOVES: %d\n", game->movies);
     return 0;
 }
 
+void inicialize_map(Game *game, const char *line, int count)
+{
+        for (int i = 0; i < WIDTH; i++) {
+            game->map[count][i] = line[i];
+            if (game->map[count][i] == 'P') {
+                    game->player_x = i;
+                    game->player_y = count;
+            } 
+            else if (game->map[count][i] == 'C') {
+                    game->collectibles++;
+            }
+        }
+}
 
 // Função para calcular as dimensões da janela com base no tamanho do mapa
 void calculate_window_size(Game *game) {
@@ -259,6 +190,43 @@ void calculate_window_size(Game *game) {
     mlx_destroy_window(game->mlx, game->win);
 
     game->win = mlx_new_window(game->mlx, window_width, window_height, "Collectibles Game");
+}
+int validate_map(Game *game) {
+    // Check if the map is surrounded by walls
+    int collectibles = 0;
+    int player = 0;
+    int gate = 0;
+    for (int j = 0; j < HEIGHT; j++) {
+        for (int i = 0; i < WIDTH; i++) {
+            if (game->map[j][i] == 'C') {
+                collectibles++;
+            } else if (game->map[j][i] == 'P') {
+                player++;
+            } else if (game->map[j][i] == 'E') {
+                gate++;
+            }
+        }
+    }
+    if (player != 1 || gate != 1 || collectibles < 1) {
+        return 0; // Invalid map
+    }
+    for (int i = 0; i < WIDTH; i++) {
+        if (game->map[0][i] != '1' || game->map[HEIGHT - 1][i] != '1') {
+            fprintf(stderr, "Error: Map must be surrounded by walls.\n");
+            return 0; // Invalid map
+        }
+    }
+
+    for (int j = 0; j < HEIGHT; j++) {
+        if (game->map[j][0] != '1' || game->map[j][WIDTH - 1] != '1') {
+            fprintf(stderr, "Error: Map must be surrounded by walls.\n");
+            return 0; // Invalid map
+        }
+    }
+
+    // Add other rules if needed...
+
+    return 1; // Valid map
 }
 int main(void) {
     int fd = open("map5x10.ber", O_RDONLY);
@@ -286,30 +254,34 @@ int main(void) {
     for (int i = 0; i < HEIGHT; i++) {
         game.map[i] = (char *)malloc(WIDTH * sizeof(char));
     }
-
+    game.collectibles = 0;
     // Inicializar o mapa
-    for (int j = 0; j < HEIGHT; j++) {
-        char buffer[WIDTH + 1];
-        read(fd, buffer, WIDTH + 1);
-        for (int i = 0; i < WIDTH; i++) {
-            game.map[j][i] = buffer[i];
-            if (buffer[i] == 'P') {
-                if (j >= 0 && j < HEIGHT && i >= 0 && i < WIDTH) {
-                    game.player_x = i;
-                    game.player_y = j;
-                } else {
-                    fprintf(stderr, "Erro: Coordenadas iniciais do jogador fora dos limites do mapa.\n");
-                    exit(EXIT_FAILURE);
-                }
-            } else if (buffer[i] == 'C') {
-                game.collectibles++;
-            }
-        }
-    }
-    printf("%d", game.collectibles);
+    
+    
 
     close(fd);
     
+    fd = open("map5x10.ber", O_RDONLY);
+    if (fd == -1) {
+        perror("Erro ao abrir o arquivo");
+        exit(EXIT_FAILURE);
+    }
+    char *line = NULL;
+    size_t len = 0;
+    int count = 0;
+    while ((line = get_next_line(fd)) != NULL && count < HEIGHT) {
+        inicialize_map(&game, line, count);
+        count++;
+        free(line);
+    }
+    if (!validate_map(&game)) 
+    {
+        fprintf(stderr, "Erro ao gerar mapa, lhe falta algo meu amigo...\n");
+        // Handle the error as needed (e.g., exit(EXIT_FAILURE))
+        return EXIT_FAILURE;
+    }
+
+    printf("COletaveissssssss%d\n", game.collectibles);
     // Desenhar o mapa inicial
     draw_map(&game);
 
