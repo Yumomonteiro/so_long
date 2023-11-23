@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:14:23 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/11/23 11:15:54 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/11/23 18:17:58 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,16 @@
 #include <fcntl.h>
 #include <string.h>
 #include <X11/keysym.h>
+#include <X11/X.h>
+
+
+
 
 #define INITIAL_BLOCK_SIZE 150
 #define WIDTH 10
 #define HEIGHT 5
 #define NUM_IMAGES 1
+
 
 typedef struct {
     char **map;
@@ -44,10 +49,19 @@ typedef struct {
     void *player_R_images[NUM_IMAGES];
     int current_image_index;
     int is_key_pressed;
+    void * player_current_image;
+        //moves
+    int movies;
+    char *moves_str;
+    int moves_x_position;  
+    int moves_y_position;  
+    int moves_font_size;
 } Game;
 
 
+
 /* UTILS */
+void custom_delay(int iterations);
 void clear_player_area(Game *game);
 void draw_map(Game *game);
 void initialize_player_images(Game *game);
@@ -56,6 +70,7 @@ int handle_key(int key, Game *game);
 void calculate_window_size(Game *game);
 void handle_movement(int new_x, int new_y, Game *game);
 void clear_previous_position(Game *game, int x, int y);
+void draw_player(Game *player, void *mlx, void *win);
 
 
 /* END OF UTILS */

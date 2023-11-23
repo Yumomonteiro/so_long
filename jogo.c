@@ -1,26 +1,5 @@
 #include "so_long.h"
-#include "minilibx-linux/mlx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include <X11/keysym.h>
 
-// Tamanho inicial do bloco
-
-
-
-
-
-// void draw_background(Game *game, char *image_path) {
-//     int width, height;
-
-//     // Carregar a imagem
-//     game->background_map = mlx_xpm_file_to_image(game->mlx, image_path, &width, &height);
-//     // Desenhar a imagem na janela
-//     mlx_put_image_to_window(game->mlx, game->win, game->background_map, 0, 0);
-// }
 
 // Função para desenhar o mapa
 void draw_map(Game *game) {
@@ -51,56 +30,89 @@ void draw_map(Game *game) {
             }
         }
     }
+    if (game->moves_str != NULL) {
+        mlx_string_put(game->mlx, game->win, game->moves_x_position, game->moves_y_position, 0xFFFFFF, game->moves_str);
+    }
+     mlx_do_sync(game->mlx);  // Forçar sincronização
 }
 void animate_and_move_right(Game *game) {
-    if (!game->is_key_pressed) {
-        game->is_key_pressed = 1;
+    // Destruir a imagem anterior do jogador
+    mlx_destroy_image(game->mlx, game->player_current_image);
 
-        // Limpar a posição anterior do jogador
-        game->map[game->player_y][game->player_x] = '0';
+    // Atualizar o índice da imagem do jogador para criar um loop
+    game->current_image_index = (game->current_image_index + 1) % NUM_IMAGES;
 
-        int initial_x = game->player_x * (game->width / WIDTH) + 30;
-        int initial_y = game->player_y * (game->width / WIDTH) + 30;
+    // Atualizar a imagem do jogador com a próxima imagem no loop
+    int x = game->player_x * (game->width / WIDTH) + 30;
+    int y = game->player_y * (game->width / WIDTH) + 30;
 
-        // Atualizar a posição do jogador
-        int target_x = game->player_x + 1;
-        int final_x = target_x * (game->width / WIDTH) + 30;
-        int final_y = game->player_y * (game->width / WIDTH) + 30;
+    // Construir o caminho para a próxima imagem
+    char image_path[50];
+    snprintf(image_path, sizeof(image_path), "images/loop_walking_right/viking%d.xpm", game->current_image_index);
 
-        float progress = 0;
-        float step = 0.18;
+    // Carregar a próxima imagem
+    game->player_current_image = mlx_xpm_file_to_image(game->mlx, image_path, &(game->width), &(game->height));
 
-        // Realizar a animação enquanto o jogador se move para a direita
-        while (progress <= 1.0) {
-            int intermediate_x = (1 - progress) * initial_x + progress * final_x;
-            int intermediate_y = (1 - progress) * initial_y + progress * final_y;
+    // Colocar a nova imagem do jogador na janela
+    mlx_put_image_to_window(game->mlx, game->win, game->player_current_image, x, y);
 
-            // Limpar a janela antes de desenhar a nova posição do jogador
-            mlx_clear_window(game->mlx, game->win);
+    // Introduzir um atraso personalizado entre cada imagem (ajuste o valor conforme necessário)
+    custom_delay(50000);
 
-            // Atualizar a imagem do jogador com a próxima imagem no loop
-            mlx_put_image_to_window(game->mlx, game->win, game->player_R_images[game->current_image_index], intermediate_x, intermediate_y);
-
-            mlx_do_sync(game->mlx);  // Forçar sincronização
-
-            progress += step;
-            usleep(70000);  // Adicionar um pequeno atraso para controlar a velocidade da transição
-            animate_player(game);  // Chamar a função para animar o jogador durante o movimento
-        }
-
-        // Definir a nova posição do jogador como 'P'
-        game->map[game->player_y][target_x] = 'P';
-
-        // Atualizar a posição do jogador
-        game->player_x = target_x;
-
-        // Redesenha o mapa com a nova posição do jogador
-        draw_map(game);
-
-        // Realizar a animação
+    // Reset se for a última imagem
+    if (game->current_image_index == NUM_IMAGES - 1) {
         game->is_key_pressed = 0;
     }
 }
+// void animate_and_move_right(Game *game) {
+//     if (!game->is_key_pressed) {
+//         game->is_key_pressed = 1;
+
+//         // Limpar a posição anterior do jogador
+//         game->map[game->player_y][game->player_x] = '0';
+
+//         int initial_x = game->player_x * (game->width / WIDTH) + 30;
+//         int initial_y = game->player_y * (game->width / WIDTH) + 30;
+
+//         // Atualizar a posição do jogador
+//         int target_x = game->player_x + 1;
+//         int final_x = target_x * (game->width / WIDTH) + 30;
+//         int final_y = game->player_y * (game->width / WIDTH) + 30;
+
+//         float progress = 0;
+//         float step = 0.18;
+
+//         // Realizar a animação enquanto o jogador se move para a direita
+//         while (progress <= 1.0) {
+//             int intermediate_x = (1 - progress) * initial_x + progress * final_x;
+//             int intermediate_y = (1 - progress) * initial_y + progress * final_y;
+
+//             // Limpar a janela antes de desenhar a nova posição do jogador
+//             mlx_clear_window(game->mlx, game->win);
+
+//             // Atualizar a imagem do jogador com a próxima imagem no loop
+//             mlx_put_image_to_window(game->mlx, game->win, game->player_R_images[game->current_image_index], intermediate_x, intermediate_y);
+
+//             mlx_do_sync(game->mlx);  // Forçar sincronização
+
+//             progress += step;
+//             usleep(70000);  // Adicionar um pequeno atraso para controlar a velocidade da transição
+//             animate_player(game);  // Chamar a função para animar o jogador durante o movimento
+//         }
+
+//         // Definir a nova posição do jogador como 'P'
+//         game->map[game->player_y][target_x] = 'P';
+
+//         // Atualizar a posição do jogador
+//         game->player_x = target_x;
+
+//         // Redesenha o mapa com a nova posição do jogador
+//         draw_map(game);
+
+//         // Realizar a animação
+//         game->is_key_pressed = 0;
+//     }
+// }
 // Função para inicializar as imagens do jogador
 void initialize_player_images(Game *game) {
     char image_path[50];
@@ -112,8 +124,25 @@ void initialize_player_images(Game *game) {
     }
     game->current_image_index = 0;
     game->is_key_pressed = 0;
+    game->movies = 0;
+    game->moves_str = NULL;
+    game->moves_x_position = 10 * 70;
+    game->moves_y_position = 10;
+    game->moves_font_size = 10 * 10;
 }
+void update_moves_string(Game *game) {
+    // Libere a string anterior se existir
+    if (game->moves_str != NULL) {
+        free(game->moves_str);
+        game->moves_str = NULL;
+    }
 
+    // Aloque espaço para a nova string
+    game->moves_str = (char *)malloc(50 * sizeof(char));  // Ajuste o tamanho conforme necessário
+
+    // Construa a nova string de movimentos
+    sprintf(game->moves_str, "MOVIMENTOS: %d", game->movies);
+}
 // Função para animar o jogador
 // Função para animar o jogador
 int animate_player(Game *game) {
@@ -132,7 +161,7 @@ int animate_player(Game *game) {
         mlx_put_image_to_window(game->mlx, game->win, game->player_R_images[game->current_image_index], x, y);
 
         // Adicionar um pequeno atraso entre cada imagem
-        usleep(5000);
+        usleep(1000000);
 
         // reset se for a última imagem
         if (game->current_image_index == NUM_IMAGES - 1) {
@@ -144,32 +173,48 @@ int animate_player(Game *game) {
 }
 
 
-
+void check_collectibles(Game *game) {
+    if (game->collectibles == 0) {
+        int width, height;
+        mlx_destroy_image(game->mlx, game->gate_img);  // Liberar a imagem anterior
+        game->gate_img = mlx_xpm_file_to_image(game->mlx, "images/items/gate_open.xpm", &width, &height);
+        // Atualizar a imagem do portão para a versão "aberta"
+        // Certifique-se de ter a imagem correspondente ("gate_open.xpm") disponível no seu diretório de imagens.
+        draw_map(game);  // Redesenha o mapa com a nova imagem do portão
+    }
+}
+void custom_delay(int iterations) {
+    for (int i = 0; i < iterations; i++) {
+        // Não faz nada aqui, apenas espera.
+    }
+}
 
 // Função para manipular teclas
 int handle_key(int key, Game *game) {
     int new_x = game->player_x;
     int new_y = game->player_y;
+        if (key == XK_Escape) {
+            exit(0);
+        } 
+        else if (key == XK_Up) 
+        {
+            new_y--;
 
-    if (key == XK_Escape) {
-        exit(0);
-    } else if (key == XK_Up) {
-        new_y--;
-    } else if (key == XK_Down) {
-        new_y++;
-    } else if (key == XK_Left) {
-        new_x--;
-    } else if (key == XK_Right) {
-        new_x++;
-        //animate_and_move_right(game);
-    } else {
-        game->is_key_pressed = 0;
-        return 0;
-    }
-
+        } else if (key == XK_Down) {
+            new_y++;
+        } else if (key == XK_Left) {
+            new_x--;
+        } else if (key == XK_Right) {
+            new_x++;
+            game->is_key_pressed = 0;
+        } else {
+            game->is_key_pressed = 0;
+            return 0;
+        }
     // Verificar se a nova posição é válida (não é uma parede)
     if (new_x >= 0 && new_x < WIDTH && new_y >= 0 && new_y < HEIGHT && game->map[new_y][new_x] != '1' && game->map[new_y][new_x] != 'E') 
     {
+        game->movies++;
         // Limpar a posição anterior do jogador
         game->map[game->player_y][game->player_x] = '0';
 
@@ -179,11 +224,12 @@ int handle_key(int key, Game *game) {
 
         // Verificar se o jogador coletou um item
         if (game->map[game->player_y][game->player_x] == 'C') {
-             game->collectibles--;
-
-            // Restante do código...
-
+            
+            game->collectibles--;
+            check_collectibles(game);
         }
+        update_moves_string(game);
+    
 
         // Definir a nova posição do jogador como 'P'
         game->map[new_y][new_x] = 'P';
@@ -198,7 +244,7 @@ int handle_key(int key, Game *game) {
         printf("Você não pode interagir com o portal até coletar todos os itens!\n");
         // Adicione qualquer lógica adicional que você queira executar quando o jogador tentar interagir sem coletar todos os itens.
     }
-
+    printf("MOVES: %d\n", game->movies);
     return 0;
 }
 
@@ -228,6 +274,7 @@ int main(void) {
     game.win = mlx_new_window(game.mlx, game.width, game.height, "Collectibles Game");
 
     int width, height;
+    // Imagem portao aberto / fechado //
     game.gate_img = mlx_xpm_file_to_image(game.mlx, "images/items/gate_close.xpm", &width, &height);
     game.obstaculo_img = mlx_xpm_file_to_image(game.mlx, "images/items/obstaculo.xpm", &width, &height);
     game.coletavel_img = mlx_xpm_file_to_image(game.mlx, "images/items/coletavel00.xpm", &width, &height);
@@ -262,19 +309,16 @@ int main(void) {
     printf("%d", game.collectibles);
 
     close(fd);
-
+    
     // Desenhar o mapa inicial
     draw_map(&game);
 
-    // Desenhar a imagem background
-    //draw_background(&game, "images/backgroundwindown.xpm");
-
     // Inicializar as imagens do loop pra direita do player
     initialize_player_images(&game);
-
+    
     // Registrar a função de tratamento de teclas
-    mlx_key_hook(game.win, handle_key, &game);
-
+    mlx_hook(game.win, 2, 1L << 0,handle_key, &game);
+    
     // Registrar a função de animação do jogador
     mlx_loop_hook(game.mlx, animate_player, &game);
 
