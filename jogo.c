@@ -228,6 +228,54 @@ int validate_map(Game *game) {
 
     return 1; // Valid map
 }
+
+void flood_fill(char map[HEIGHT][WIDTH], int x, int y, int accessible[HEIGHT][WIDTH]) {
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || map[y][x] == '1' || accessible[y][x]) {
+        return; // Base case: out of bounds or wall or already visited
+    }    // Mark the current position as visited
+    accessible[y][x] = 1;    // Recursive flood fill in all four directions
+    flood_fill(map, x + 1, y, accessible);
+    flood_fill(map, x - 1, y, accessible);
+    flood_fill(map, x, y + 1, accessible);
+    flood_fill(map, x, y - 1, accessible);
+}
+int all_collectibles_accessible(char map[HEIGHT][WIDTH]) {
+    int accessible[HEIGHT][WIDTH] = {0}; // 0 means not accessible, 1 means accessible
+    int player_x = -1, player_y = -1;
+
+    // Find the player ('P') position
+    int i = 0;
+    while (i < HEIGHT && player_x == -1) {
+        int j = 0;
+        while (j < WIDTH && player_x == -1) {
+            if (map[i][j] == 'P') {
+                player_x = j;
+                player_y = i;
+            }
+            j++;
+        }
+        i++;
+    }
+
+    // Perform flood fill starting from the player position
+    flood_fill(map, player_x, player_y, accessible);
+
+    // Check if any collectibles ('C') are not accessible
+    i = 0;
+    while (i < HEIGHT) {
+        int j = 0;
+        while (j < WIDTH) {
+            if (map[i][j] == 'C' && !accessible[i][j]) {
+                return 0; // Not all collectibles are accessible
+            }
+            j++;
+        }
+        i++;
+    }
+
+    return 1; // All collectibles are accessible
+}
+
 int main(void) {
     int fd = open("map5x10.ber", O_RDONLY);
     if (fd == -1) {
@@ -249,23 +297,14 @@ int main(void) {
     game.player_img = mlx_xpm_file_to_image(game.mlx, "images/floor_player00.xpm", &width, &height);
     game.floor_img = mlx_xpm_file_to_image(game.mlx, "images/items/floor.xpm", &width, &height);
 
-    // Alocar dinamicamente o mapa
-    game.map = (char **)malloc(HEIGHT * sizeof(char *));
-    for (int i = 0; i < HEIGHT; i++) {
-        game.map[i] = (char *)malloc(WIDTH * sizeof(char));
-    }
     game.collectibles = 0;
-    // Inicializar o mapa
-    
-    
-
-    close(fd);
     
     fd = open("map5x10.ber", O_RDONLY);
     if (fd == -1) {
         perror("Erro ao abrir o arquivo");
         exit(EXIT_FAILURE);
     }
+
     char *line = NULL;
     size_t len = 0;
     int count = 0;
@@ -274,23 +313,28 @@ int main(void) {
         count++;
         free(line);
     }
-    if (!validate_map(&game)) 
-    {
-        fprintf(stderr, "Erro ao gerar mapa, lhe falta algo meu amigo...\n");
-        // Handle the error as needed (e.g., exit(EXIT_FAILURE))
+
+    if (!validate_map(&game)) {
+        fprintf(stderr, "Erro ao gerar mapa, algo está faltando...\n");
         return EXIT_FAILURE;
     }
 
-    printf("COletaveissssssss%d\n", game.collectibles);
+    if (!all_collectibles_accessible(game.map)) {
+        fprintf(stderr, "Erro ao gerar mapa, algo está faltando...\n");
+        return EXIT_FAILURE;
+    }
+
+    printf("Coletáveis restantes: %d\n", game.collectibles);
+
     // Desenhar o mapa inicial
     draw_map(&game);
 
     // Inicializar as imagens do loop pra direita do player
     initialize_player_images(&game);
-    
+
     // Registrar a função de tratamento de teclas
-    mlx_hook(game.win, 2, 1L << 0,handle_key, &game);
-    
+    mlx_hook(game.win, 2, 1L << 0, handle_key, &game);
+
     // Registrar a função de animação do jogador
     mlx_loop_hook(game.mlx, animate_player, &game);
 

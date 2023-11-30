@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/21 18:14:23 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/11/23 19:28:06 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/11/30 17:42:55 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 
 
 typedef struct {
-    char **map;
+    char map[HEIGHT][WIDTH];
     int player_x;
     int player_y;
     int collectibles;
