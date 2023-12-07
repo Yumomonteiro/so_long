@@ -1,90 +1,115 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   so_long.h                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/21 18:14:23 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/11/30 17:42:55 by yude-oli         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
 #include "minilibx-linux/mlx.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <string.h>
-#include <X11/keysym.h>
-#include <X11/X.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <stdlib.h>
+# include <math.h>
+# include <stdio.h>
+# include <stdarg.h>
+#include <limits.h>
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 10
+#endif
+# define UP      65362
+# define DOWN    65364
+# define LEFT    65361
+# define RIGHT   65363
+# define ESC     65307
+# define IMG_PXL 150
+# define WND_NAME "so_long"
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 100
-# endif
+typedef struct s_player
+{
+	int	y;
+	int	x;
+
+}t_player;
+
+typedef struct s_img
+{
+	void	*empty;
+	void	*collectible;
+	void	*wall;
+	void	*exit;
+	void	*player_left;
+	void	*player_right;
+}t_img;
+
+typedef struct s_map
+{
+	int			fd;
+	char		*line;
+	char		*file;
+	char		**array;
+	char		**copy;
+	char		*filename;
+	int			y;
+	int			x;
+	int 		collectibles_remaining;
+	int			animation_on;
+	int     	current_frame;
+	int         player_moving;
+	int			exit;
+	int			moves;
+	void		*mlx;
+	void		*wnd;
+	t_img		img;
+	t_player	player;
+
+}t_map;
 
 
-#define INITIAL_BLOCK_SIZE 150
-#define WIDTH 10
-#define HEIGHT 5
-#define NUM_IMAGES 11
+//void	error_array(t_map *map);
+void	error_openfile(void);
+void	error_size(t_map *map);
+void 	error_wall(t_map *map);
+void	error_openfile(void);
+void 	custom_delay(int microseconds);
+void 	start_animation(t_map *map);
+void	error_map_elements(t_map *map);
+void	ft_putchar_lenght(char c, int *len);
+void 	stop_animation(t_map *map);
+void	ft_win(t_map *map);
+void	map_initializer(t_map *map, char **av);
+void 	read_player_and_collectibles(t_map *map);
+void	map_array(t_map *map);
+void 	draw_map(t_map *map);
+void 	open_door(t_map *map);
+void	ft_exit_free(t_map *map);
+void	error_opendoor(void);
+void	*ft_memcpy(void *dest, const void *src, size_t n);
+void 	flood_fill(char **array, int x, int y, int height, int width, int **accessible);
 
-
-typedef struct {
-    char map[HEIGHT][WIDTH];
-    int player_x;
-    int player_y;
-    int collectibles;
-    int width;
-    int height;
-    void *mlx;
-    void *win;
-    void *player_img;
-    void *obstaculo_img;
-    void *coletavel_img;
-    void *background_map;
-    void *floor_img;
-    void *gate_img;
-    void *player_R_images[NUM_IMAGES];
-    int current_image_index;
-    int is_key_pressed;
-    void * player_current_image;
-        //moves
-    int movies;
-    char *moves_str;
-    int moves_x_position;  
-    int moves_y_position;  
-    int moves_font_size;
-} Game;
-
-
-
-/* UTILS */
-
+char	*ft_strjoinfree(char *s1, char *s2);
+char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
+char	**ft_split(char const *s, char c);
+//GET NEXT LINE
 char	*get_next_line(int fd);
-char	*buffer_total_clear(int fd, char **buffer, char *line);
-int	    line_updater(char **line, char buffer[]);
-int	    ft_strlenm(char const *s1);
+int		line_updater(char **line, char buffer[]);
+int		ft_strlenm(char const *s1);
 char	*ft_strjoinm(char const *s1, char const *s2);
 void	buffer_clear(char *buffer);
-// qfafaa
-int validate_map(Game *game);
-void inicialize_map(Game *game, const char *line, int count);
-void custom_delay(int iterations);
-void clear_player_area(Game *game);
-void draw_map(Game *game);
-void initialize_player_images(Game *game);
-int animate_player(Game *game);
-int handle_key(int key, Game *game);
-void calculate_window_size(Game *game);
-void handle_movement(int new_x, int new_y, Game *game);
-void clear_previous_position(Game *game, int x, int y);
-void draw_player(Game *player, void *mlx, void *win);
+char	*buffer_total_clear(int fd, char **buffer, char *line);
 
-
-/* END OF UTILS */
-
-#endif 
+int		ft_close(t_map *map);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		movement(int keycode, t_map *map);
+int 	is_map_viable(char **map, int height, int width);
+int		key_release(int keycode, t_map *map);
+int		ft_free_array(char **ret, int i);
+int 	all_collectibles_accessible(char **array, int height, int width, t_player player);
+size_t	ft_strlen(const char *str);
+//PRINTF
+void		ft_printf_checker(char s, va_list *args, int *len, int i);
+void		ft_putchar_len(char character, int *len);
+void		ft_string(char *args, int *len);
+int			ft_printf(const char *string, ...);
+void		ft_intnumber(int nbr, int *len);
+void		ft_hexa_in_lower_or_upper(unsigned int x, int *len, char deftype_x);
+void		ft_unsigned_int(unsigned int u, int *len);
+void		ft_pointer(size_t pointer, int *len);
+#endif
