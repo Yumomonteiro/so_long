@@ -1,7 +1,7 @@
 # So_long - Projeto 42 Lisboa
 
 Este é o meu projeto So_long, desenvolvido como parte do curso da 42 Lisboa. O objetivo do projeto é criar um jogo 2D simples usando a biblioteca gráfica miniLibX.
-
+![So_long](https://github.com/Yumomonteiro/so_long/blob/main/images/jogo.png?raw=true)
 ## Introdução
 
 O So_long é um jogo onde o jogador controla um personagem em um mapa e precisa coletar itens enquanto evita obstáculos. O jogo é escrito em C e usa a biblioteca gráfica miniLibX para a representação visual.
