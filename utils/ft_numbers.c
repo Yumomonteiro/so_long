@@ -5,90 +5,94 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/13 10:40:53 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/07 16:01:26 by yude-oli         ###   ########.fr       */
+/*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
+/*   Updated: 2023/12/20 12:54:23 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../so_long.h"
+#include "ft_printf.h"
 
-void	ft_intnumber(int nbr, int *len)
+void	ft_putnbr(int number, int *len)
 {
-	if (nbr == INT_MIN)
+	if (number == -2147483648)
 	{
-		write(1, "-2147483648", 11);
-		(*len += 11);
+		write (1, "-2147483648", 11);
+		(*len) += 11;
 		return ;
 	}
-	if (nbr < 0)
+	if (number < 0)
 	{
-		ft_putchar_len('-', len);
-		ft_intnumber(nbr * -1, len);
+		number *= -1;
+		ft_putchar_lenght('-', len);
+		ft_putnbr(number, len);
 	}
 	else
 	{
-		if (nbr > 9)
-			ft_intnumber(nbr / 10, len);
-		ft_putchar_len(nbr % 10 + '0', len);
+		if (number >= 10) 
+			ft_putnbr((number / 10), len);
+		ft_putchar_lenght((number % 10 + '0'), len);
+	}
+}
+
+void	ft_hexadecimal(unsigned int n, int *len, char x_or_X)
+{
+	char	*base;
+	char	string[25];
+	int		i;
+
+	if (x_or_X == 'x')
+		base = "0123456789abcdef";
+	else
+		base = "0123456789ABCDEF";
+	i = 0;
+	if (n == 0)
+	{
+		ft_putchar_lenght('0', len);
+		return ;
+	}
+	while (n != 0)
+	{
+		string[i] = base [n % 16];
+		n = n / 16;
+		i++;
+	}
+	while (i--)
+	{
+		ft_putchar_lenght(string[i], len);
 	}
 }
 
 void	ft_pointer(size_t pointer, int *len)
 {
+	char	*base;
 	char	string[25];
 	int		i;
-	char	*base_char;
 
-	base_char = "0123456789abcdef";
+	base = "0123456789abcdef";
 	i = 0;
 	if (pointer == 0)
 	{
-		write (1, "(nil)", 5);
+		write(1, "(nil)", 5);
 		(*len) += 5;
 		return ;
 	}
-	write (1, "0x", 2);
+	write(1, "0x", 2);
 	(*len) += 2;
 	while (pointer != 0)
 	{
-		string[i] = base_char[pointer % 16];
+		string[i] = base[pointer % 16];
 		pointer = pointer / 16;
 		i++;
 	}
 	while (i--)
 	{
-		ft_putchar_len(string[i], len);
+		ft_putchar_lenght(string[i], len);
 	}
-}
-
-void	ft_hexa_in_lower_or_upper(unsigned int x, int *len, char deftype_x)
-{
-	char	string[25];
-	char	*base_char;
-	int		i;
-
-	i = 0;
-	if (deftype_x == 'X')
-		base_char = "0123456789ABCDEF";
-	else
-		base_char = "0123456789abcdef";
-	if (x == 0)
-	{
-		ft_putchar_len('0', len);
-	}
-	while (x != 0)
-	{
-		string[i] = base_char [x % 16];
-		x = x / 16;
-		i++;
-	}
-	while (i--)
-		ft_putchar_len(string[i], len);
 }
 
 void	ft_unsigned_int(unsigned int u, int *len)
 {
 	if (u >= 10)
 		ft_unsigned_int(u / 10, len);
-	ft_putchar_len(u % 10 + '0', len);
+	ft_putchar_lenght((u % 10 + '0'), len);
 }

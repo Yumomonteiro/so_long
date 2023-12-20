@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_split.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
+/*   Updated: 2023/12/20 12:54:34 by yude-oli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
 static int	wordcounter(char const *s, char c)
@@ -14,7 +26,7 @@ static int	wordcounter(char const *s, char c)
 		if (s[i] != c && s[i])
 			words++;
 		while (s[i] != c && s[i])
-				i++;
+			i++;
 	}
 	return (words);
 }
@@ -28,7 +40,7 @@ static char	*stringreturn(char const *s, char c)
 	if (!s)
 		return (NULL);
 	while (s[i] && s[i] != c)
-			i++;
+		i++;
 	str = malloc(sizeof(char) * (i + 1));
 	if (!str)
 		return (NULL);

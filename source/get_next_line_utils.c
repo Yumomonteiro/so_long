@@ -5,11 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/25 14:45:45 by ada-mata          #+#    #+#             */
-/*   Updated: 2023/12/07 16:57:18 by yude-oli         ###   ########.fr       */
+/*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
+/*   Updated: 2023/12/20 12:56:11 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include "../so_long.h"
 
 char	*buffer_total_clear(int fd, char **buffer, char *line)
@@ -33,7 +34,7 @@ int	line_updater(char **line, char buffer[])
 	int		i;
 
 	join = ft_strjoinm(*line, buffer);
-	free(*line);                                  
+	free(*line);
 	if (join == NULL)
 		return (-1);
 	*line = join;

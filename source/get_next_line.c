@@ -5,11 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/25 14:44:22 by ada-mata          #+#    #+#             */
-/*   Updated: 2023/12/07 16:55:31 by yude-oli         ###   ########.fr       */
+/*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
+/*   Updated: 2023/12/20 12:56:17 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
 #include "../so_long.h"
 #include <fcntl.h> 
 
@@ -35,32 +36,9 @@ char	*get_next_line(int fd)
 		}
 		flag = line_updater(&line, buffer);
 		buffer_clear(buffer);
-		
 		if (flag == 1)
 			return (line);
 		if (flag == -1)
 			return (NULL);
 	}
 }
-/*
-int	main(void)
-{
-	char	*line;
-	int		fd1;
-
-	fd1 = open("texto", O_RDONLY);
-	//printf("line: %d", fd1);
-	if (fd1 == -1)
-	{
-		perror("Error opening file");
-		return (1);
-	}
-	while ((line = get_next_line(fd1)) != NULL) {
-	  printf("line: %s\n", line);
-		free(line);
-	}    
-	close(fd1);
-
-	//printf("FOPEN_MAX = %d\n",FOPEN_MAX);
-	return (0);
-} */

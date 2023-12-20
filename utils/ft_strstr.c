@@ -1,37 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_words.c                                         :+:      :+:    :+:   */
+/*   ft_strstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 12:55:26 by yude-oli         ###   ########.fr       */
+/*   Created: 2023/12/20 13:06:18 by yude-oli          #+#    #+#             */
+/*   Updated: 2023/12/20 13:30:56 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-
-void	ft_putchar_lenght(char c, int *len)
+char	*ft_strstr(const char *haystack, const char *needle)
 {
-	write(1, &c, 1);
-	(*len)++;
-}
-
-void	ft_putstr(char *args, int *len)
-{
-	int		i;
+	int	i;
+	int	j;
 
 	i = 0;
-	if (!args)
+	if (needle[0] == '\0')
+		return ((char *)haystack);
+	while (haystack[i] != '\0')
 	{
-		write(1, "(null)", 6);
-		(*len) += 6;
-		return ;
-	}
-	while (args[i])
-	{
-		ft_putchar_lenght(args[i], len);
+		j = 0;
+		while (haystack[i + j] == needle[j] && haystack[i + j] != '\0')
+		{
+			if (needle[j + 1] == '\0')
+				return ((char *)&haystack[i]);
+			j++;
+		}
 		i++;
 	}
+	return (0);
 }

@@ -1,48 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   movements.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
+/*   Updated: 2023/12/20 12:56:35 by yude-oli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../so_long.h"
 
-void open_door(t_map *map)
+int	move_player_and_check(t_map *map, int new_x, int new_y)
 {
-	int width;
-	int height;
-	if (map->collectibles_remaining == 0)
-		{
-			mlx_destroy_image(map->mlx, map->img.exit);
-			map->img.exit = mlx_xpm_file_to_image(map->mlx, "images/door-open.xpm", &width, &height);
-			draw_map(map);
-		}
+	if (map->array[new_y][new_x] == 'C')
+		check_collectibles(map, new_x, new_y);
+	if (map->array[new_y][new_x] == '0' || map->array[new_y][new_x] == 'C')
+		move_player(map, new_x, new_y);
+	if (map->collectibles_remaining == 0 && map->array[new_y][new_x] == 'E')
+		exit_game(map, new_x, new_y);
+	else if (map->collectibles_remaining != 0 && 
+		map->array[new_y][new_x] == 'E')
+		error_opendoor();
+	return (0);
 }
 
-void move_player(t_map *map, int new_x, int new_y)
+int	handle_player_movement(int keycode, t_map *map)
 {
-	map->array[map->player.y][map->player.x] = '0';
-	map->array[new_y][new_x] = 'P';
-	map->player.x = new_x;
-	map->player.y = new_y;
-    map->moves++;
-}
+	int		new_x;
+	int		new_y;
 
-void exit_game(t_map *map, int new_x, int new_y)
-{
-	map->array[map->player.y][map->player.x] = '0';
-	map->array[new_y][new_x] = 'P';
-	map->player.x = new_x;
-	map->player.y = new_y;
-	ft_win(map);
-	exit(0);
-}
-
-void check_collectibles(t_map *map, int new_x, int new_y)
-{
-			map->collectibles_remaining--;
-			map->array[new_y][new_x] = '0';
-			open_door(map);
-}
-
-int movement(int keycode, t_map *map)
-{
-	int new_x = map->player.x;
-	int new_y = map->player.y;
-
+	new_x = map->player.x;
+	new_y = map->player.y;
 	if (keycode == UP)
 		new_y--;
 	else if (keycode == DOWN)
@@ -60,17 +50,15 @@ int movement(int keycode, t_map *map)
 		map->player_moving = 1;
 	}
 	else if (keycode == ESC)
-		exit(0);
+		ft_close(map);
+	return (move_player_and_check(map, new_x, new_y));
+}
 
-	if (map->array[new_y][new_x] == 'C')
-		check_collectibles(map, new_x, new_y);
-	if (map->array[new_y][new_x] != 'E' && map->array[new_y][new_x] != '1')
-		move_player(map, new_x, new_y);
-	if (map->collectibles_remaining == 0 && map->array[new_y][new_x] == 'E')
-		exit_game(map, new_x, new_y);
-	else if (map->collectibles_remaining != 0 && map->array[new_y][new_x] == 'E')
-		error_opendoor();
+int	movement(int keycode, t_map *map)
+{
 	mlx_clear_window(map->mlx, map->wnd);
-	draw_map(map);		
+	if (handle_player_movement(keycode, map) == 1)
+		return (1);
+	draw_map(map);
 	return (0);
 }
