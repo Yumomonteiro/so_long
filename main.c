@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 13:25:20 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/20 16:24:12 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ void	initialize_map_images(t_map *map)
 void	initialize_functions(t_map *map)
 {
 	mlx_hook(map->wnd, 2, 1L << 0, movement, map);
-	mlx_hook(map->wnd, 3, 1L << 1, key_release, map);
 	draw_map(map);
 	mlx_loop(map->mlx);
 }

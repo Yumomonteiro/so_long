@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 13:27:18 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/20 16:20:43 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,8 @@ void			error_openfile(void);
 void			error_map(t_map *map);
 void			error_openfile(void);
 void			custom_delay(int microseconds);
-void			start_animation(t_map *map);
 void			error_map_elements(t_map *map);
 void			ft_putchar_lenght(char c, int *len);
-void			stop_animation(t_map *map);
 void			ft_win(t_map *map);
 void			map_initializer(t_map *map, char **av);
 void			read_player_and_collectibles(t_map *map);

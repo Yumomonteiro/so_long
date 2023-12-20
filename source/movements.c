@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 12:56:35 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/20 16:18:56 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,11 @@ int	handle_player_movement(int keycode, t_map *map)
 	else if (keycode == LEFT)
 	{
 		new_x--;
-		start_animation(map);
 		map->player_moving = 2;
 	}
 	else if (keycode == RIGHT)
 	{
 		new_x++;
-		start_animation(map);
 		map->player_moving = 1;
 	}
 	else if (keycode == ESC)
