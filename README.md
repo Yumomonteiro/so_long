@@ -27,14 +27,10 @@ Antes de começar, certifique-se de ter o miniLibX instalado em seu sistema. Con
    ```bash
       cd so_long
 
-3. Compile a biblioteca:
+3. Compile:
 
     ```bash
       make 
-4. Compile o projeto:
-
-    ```bash
-    cc main.c so_long.a minilibx-linux/libmlx.a -lXext -lX11 -g
 
 5. Execute o programa com o mapa desejado:
 
