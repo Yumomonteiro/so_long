@@ -35,7 +35,7 @@ Antes de começar, certifique-se de ter o miniLibX instalado em seu sistema. Con
 5. Execute o programa com o mapa desejado:
 
     ```bash
-    ./a.out map.ber
+    ./so_long map.ber
     
 
 
