@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 12:55:57 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/21 15:53:04 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	ft_free_array(char **ret, int i)
 	while (i > 0)
 		free(ret[--i]);
 	free(ret);
+        
 	return (0);
 }
 
@@ -27,7 +28,7 @@ void	ft_exit_free(t_map *map)
 	if (map->file)
 		free(map->file);
 	if (map->line)
-		free(map->file);
+		free(map->line);
 	exit(EXIT_FAILURE);
 }
 
@@ -44,6 +45,8 @@ int	ft_close(t_map *map)
 	mlx_destroy_image(map->mlx, map->player_frames[2]);
 	ft_free_array(map->array, map->y);
 	mlx_destroy_display(map->mlx);
+        if (map->line)
+                free(map->file);
 	free(map->mlx);
 	exit(EXIT_SUCCESS);
 	return (0);

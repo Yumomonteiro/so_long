@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 12:56:38 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:18:58 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	read_player_and_collectibles(t_map *map)
 	int		y;
 
 	y = 0;
-	while (y < map->y)
+	while (map->array[y])
 	{
 		x = 0;
-		while (x < map->x)
+		while (map->array[y][x])
 		{
 			if (map->array[y][x] == 'P')
 			{
@@ -32,8 +32,12 @@ void	read_player_and_collectibles(t_map *map)
 				map->collectibles_remaining++;
 			x++;
 		}
+                if(x != map->x)
+                        error_map(map);
 		y++;
 	}
+        if(y != map->y)
+                error_map(map);
 }
 
 void	display_c_and_moves(t_map *map)

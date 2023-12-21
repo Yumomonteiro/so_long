@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 14:26:53 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/21 12:13:15 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	are_borders_valid(char **map, int height, int width)
 	int		i;
 	int		j;
 
-	i = 0;
+	i = -1;
 	while (++i < height)
 	{
 		if (map[i][0] != '1' || map[i][width - 1] != '1')
 			return (0);
 	}
-	j = 0;
+	j = -1;
 	while (++j < width)
 	{
 		if (map[0][j] != '1' || map[height - 1][j] != '1')

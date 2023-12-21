@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": false,
-      "cwd": "/home/yude-oli/so_long_checker",
-      "program": "/home/yude-oli/so_long_checker/build/Debug/outDebug",
+      "cwd": "/home/yude-oli/so_long_checker2",
+      "program": "/home/yude-oli/so_long_checker2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

@@ -6,14 +6,14 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 16:20:43 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:18:17 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include "minilibx-linux/mlx.h"
+# include ".minilibx-linux/mlx.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -102,7 +102,6 @@ void			open_door(t_map *map);
 void			move_player(t_map *map, int new_x, int new_y);
 void			exit_game(t_map *map, int new_x, int new_y);
 void			check_collectibles(t_map *map, int new_x, int new_y);
-
 char			*ft_strjoinfree(char *s1, char *s2);
 char			*ft_strnstr(const char *haystack, const char *needle,
 					size_t len);

@@ -6,7 +6,7 @@
 /*   By: yude-oli <yude-oli@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 16:00:40 by yude-oli          #+#    #+#             */
-/*   Updated: 2023/12/20 13:19:02 by yude-oli         ###   ########.fr       */
+/*   Updated: 2023/12/21 16:25:11 by yude-oli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static void	read_file_lines(t_map *map, int fd)
 			ft_exit_free(map);
 		map->y++;
 	}
+        free(map->line);
 }
 
 void	map_array(t_map *map)
